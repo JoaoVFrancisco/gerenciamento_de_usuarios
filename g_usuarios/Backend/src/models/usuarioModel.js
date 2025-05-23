@@ -21,18 +21,18 @@ export const visualizarusuario = async () => {
     console.log("usuarioModel :: visualizarusuario");
     const sql = `SELECT * FROM usuarios`;
     
-
     try {
-        const [resposta] = await conexao.query(sql)
+        const [resposta] = await conexao.query(sql);
+        return [200, resposta]; // Adicione esta linha
     } catch (error) {
         console.error({mensagem: "Erro ao visualizar usuario", code:error.code, sql:error.sqlMenssage });
-        return [500, {mensagem: "Error ao visualizar usuario", code:error.code, sql:error.sqlMenssage}]
+        return [500, {mensagem: "Error ao visualizar usuario", code:error.code, sql:error.sqlMenssage}];
     }
 };
 
 export const atualizarusuario = async (nome, email, senha, id_usuarios) => {
     console.log("usuarioModel :: atualizarusuario");
-    const sql = `UPDATE usuarios SET nome=?, email=?, senha=?`;
+    const sql = `UPDATE usuarios SET nome=?, email=?, senha=? WHERE id_usuarios=?`; // Adicione WHERE
     const params = [nome, email, senha, id_usuarios];
 
     try {
@@ -65,5 +65,24 @@ export const deletarusuario = async (id_usuarios) => {
     } catch (error) {
         console.error({mensagem: "Erro ao deletar usuario", code:error.code, sql:error.sqlMenssage });
         return [500, {mensagem: "Error ao deletar usuario", code:error.code, sql:error.sqlMenssage}]
+    }
+};
+
+export const buscarUsuarioPorEmail = async (email) => {
+    console.log("usuarioModel :: buscarUsuarioPorEmail");
+    const sql = `SELECT * FROM usuarios WHERE email = ?`;
+    const params = [email];
+
+    try {
+        const [resposta] = await conexao.query(sql, params);
+        
+        if (resposta.length === 0) {
+            return null; // Nenhum usuário encontrado
+        }
+
+        return resposta[0]; // Retorna o primeiro usuário encontrado
+    } catch (error) {
+        console.error({mensagem: "Erro ao buscar usuário por email", code: error.code, sql: error.sqlMessage });
+        throw error; // Propaga o erro para ser tratado no controller
     }
 };

@@ -1,5 +1,5 @@
 import jwt from 'jsonwebtoken';
-import { atualizarusuario, criarusuario, deletarusuario, visualizarusuario } from "../models/usuarioModel.js";
+import { atualizarusuario, buscarUsuarioPorEmail, criarusuario, deletarusuario, visualizarusuario } from "../models/usuarioModel.js";
 
 const SECRET_KEY = 'sua_chave_secreta_super_segura';
 
